@@ -1,3 +1,4 @@
 payload:
   # 禁止傻逼ea的烂服务器分发
   - DOMAIN-SUFFIX,gs.ea.com
+  - DOMAIN-SUFFIX,gos.ea.com
