@@ -1,4 +1,4 @@
 payload:
   # steam下载直连
-  # - DOMAIN-KEYWORD,steamserver
+  - DOMAIN-KEYWORD,steamserver
   - DOMAIN-KEYWORD,steamcdn
