@@ -5,4 +5,5 @@ payload:
   - DOMAIN-KEYWORD,steamcdn
 
   # 苹果推送
-  - DOMAIN-SUFFIX,push.apple.com
+  # - DOMAIN-SUFFIX,push.apple.com
+  - DOMAIN-KEYWORD,courier
