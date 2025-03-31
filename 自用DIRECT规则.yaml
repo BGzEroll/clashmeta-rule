@@ -6,4 +6,4 @@ payload:
 
   # 苹果推送
   # - DOMAIN-SUFFIX,push.apple.com
-  - DOMAIN-KEYWORD,courier
+  # - DOMAIN-KEYWORD,courier
