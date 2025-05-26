@@ -1,8 +1,6 @@
 payload:
-  # steam下载直连
+  # steam下载匹配大陆cdn
   - DOMAIN-KEYWORD,steamserver
-  # - AND,((DOMAIN-KEYWORD,steamserver),(DST-PORT,443))
-  - DOMAIN-KEYWORD,steamcdn
 
   # 苹果推送
   # - DOMAIN-SUFFIX,push.apple.com
