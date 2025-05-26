@@ -1,4 +1,4 @@
 payload:
   # CloseAI
-  - DOMAIN-KEYWORD,openai,🔓️ 服务解锁
-  - DOMAIN-KEYWORD,chatgpt,🔓️ 服务解锁
+  - DOMAIN-KEYWORD,openai
+  - DOMAIN-KEYWORD,chatgpt
