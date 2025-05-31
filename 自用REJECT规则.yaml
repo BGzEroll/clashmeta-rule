@@ -1,7 +1,7 @@
 payload:
   # 禁止QUIC
-  - AND,((DST-PORT,443/8443),(NETWORK,UDP))
+  # - AND,((DST-PORT,443/8443),(NETWORK,UDP))
   
   # 禁止傻逼ea的烂服务器分发
-  - DOMAIN-SUFFIX,gs.ea.com
-  - DOMAIN-SUFFIX,gos.ea.com
+  # - DOMAIN-SUFFIX,gs.ea.com
+  # - DOMAIN-SUFFIX,gos.ea.com
