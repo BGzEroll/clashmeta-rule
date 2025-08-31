@@ -47,12 +47,21 @@ jobs:
           cd publish
           sha256sum gfw.txt > gfw.txt.sha256sum
 
+      - name: Create temporary tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          TAG=release-$(date +%Y%m%d%H%M%S)
+          git tag $TAG
+          git push origin $TAG
+          echo "RELEASE_TAG=$TAG" >> $GITHUB_ENV
+
       - name: Release and upload assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           release_name: ${{ env.RELEASE_NAME }}
-          make_latest: true
+          tag: ${{ env.RELEASE_TAG }}
           file_glob: true
           file: ./publish/*
 
