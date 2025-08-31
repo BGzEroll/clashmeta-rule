@@ -6,9 +6,7 @@ on:
     - cron: "0 22 * * *"
   push:
     branches:
-      - master
-    paths-ignore:
-      - "**/README.md"
+      - main
 
 jobs:
   build:
@@ -18,14 +16,11 @@ jobs:
         run: |
           echo "RELEASE_NAME=GFWList Released on $(date +%Y%m%d%H%M)" >> $GITHUB_ENV
           echo "TAG_NAME=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
-        shell: bash
 
-      - name: Checkout the "hidden" branch of this repo
+      - name: Checkout repository
         uses: actions/checkout@v5
-        with:
-          ref: hidden
 
-      - name: Checkout cokebar/gfwlist2dnsmasq
+      - name: Checkout gfwlist2dnsmasq
         uses: actions/checkout@v5
         with:
           repository: cokebar/gfwlist2dnsmasq
@@ -33,7 +28,7 @@ jobs:
 
       - name: Generate GFWList domains
         run: |
-          cd gfwlist2dnsmasq || exit 1
+          cd gfwlist2dnsmasq
           chmod +x ./gfwlist2dnsmasq.sh
           ./gfwlist2dnsmasq.sh -l -o ./temp-gfwlist.txt
           cd ..
@@ -41,15 +36,11 @@ jobs:
       - name: Merge gfwlist with gfwlist_ex.txt
         run: |
           mkdir publish
-          # 提取 gfwlist 域名
           cat ./gfwlist2dnsmasq/temp-gfwlist.txt | \
-            perl -ne '/^((?=^.{3,255})[a-zA-Z0-9][-_a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-_a-zA-Z0-9]{0,62})+)/ && print "$1\n"' \
-            > gfwlist.txt
-          # 融合额外域名 (来自 hidden 分支或根目录)
+            perl -ne '/^((?=^.{3,255})[a-zA-Z0-9][-_a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-_a-zA-Z0-9]{0,62})+)/ && print "$1\n"' > gfwlist.txt
           if [ -f gfwlist_ex.txt ]; then
             cat gfwlist_ex.txt >> gfwlist.txt
           fi
-          # 去重排序
           sort --ignore-case -u gfwlist.txt > publish/gfw.txt
 
       - name: Generate sha256 hash
@@ -65,22 +56,3 @@ jobs:
           tag: ${{ env.TAG_NAME }}
           file_glob: true
           file: ./publish/*
-
-      - name: Git push assets to "release" branch
-        run: |
-          cd publish || exit 1
-          git init
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b release
-          git add .
-          git commit -m "${{ env.RELEASE_NAME }}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f -u origin release
-
-      - name: Purge jsdelivr CDN
-        run: |
-          cd publish || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@release/${file}"
-          done
