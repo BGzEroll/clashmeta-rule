@@ -54,5 +54,25 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           release_name: ${{ env.RELEASE_NAME }}
           tag: ${{ env.TAG_NAME }}
+          create_tag: true       # ← 自动创建 tag
           file_glob: true
           file: ./publish/*
+
+      - name: Git push assets to "release" branch
+        run: |
+          cd publish || exit 1
+          git init
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b release
+          git add .
+          git commit -m "${{ env.RELEASE_NAME }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f -u origin release
+
+      - name: Purge jsdelivr CDN
+        run: |
+          cd publish || exit 1
+          for file in $(ls); do
+            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@release/${file}"
+          done
