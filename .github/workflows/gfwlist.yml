@@ -15,7 +15,6 @@ jobs:
       - name: Set variables
         run: |
           echo "RELEASE_NAME=GFWList Released on $(date +%Y%m%d%H%M)" >> $GITHUB_ENV
-          echo "TAG_NAME=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
 
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -53,8 +52,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           release_name: ${{ env.RELEASE_NAME }}
-          tag: ${{ env.TAG_NAME }}
-          create_tag: true       # ← 自动创建 tag
+          make_latest: true
           file_glob: true
           file: ./publish/*
 
